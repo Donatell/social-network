@@ -1,0 +1,51 @@
+.form {
+	&-group {
+		margin: 1rem 0;
+	}
+	&-text {
+		display: block;
+		color: #888;
+	}
+	input[type='text'],
+	input[type='email'],
+	input[type='password'],
+	input[type='date'],
+	select,
+	textarea {
+		display: block;
+		width: 100%;
+		padding: 0.4rem;
+		font-size: 1rem;
+		border: #ccc 1px solid;
+		border-radius: $border-radius;
+	}
+
+	input[type='submit'] {
+		font: inherit;
+	}
+
+	.social-input {
+		display: flex;
+	}
+
+	i {
+		width: 4rem;
+		padding: 0.1rem;
+
+		&.fa-twitter {
+			color: #38a1f3;
+		}
+		&.fa-facebook {
+			color: #3b5998;
+		}
+		&.fa-instagram {
+			color: #c13584;
+		}
+		&.fa-youtube {
+			color: #c4302b;
+		}
+		&.fa-linkedin {
+			color: #0077b5;
+		}
+	}
+}
