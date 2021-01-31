@@ -290,6 +290,7 @@
 	color: #0077b5;
 }
 * {
+	font-family: 'Raleway', sans-serif;
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
@@ -448,6 +449,11 @@ img {
 	padding: 0.5rem;
 	border-top-left-radius: 0.5rem;
 	border-top-right-radius: 0.5rem;
+}
+.post .post-date {
+	color: #aaa;
+	font-size: 0.8rem;
+	margin-bottom: 0.5rem;
 }
 .post-form form {
 	margin: 0;

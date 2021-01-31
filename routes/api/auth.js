@@ -4,7 +4,6 @@ const auth = require('../../middleware/auth.js');
 const User = require('./models/User.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('config');
 const { check, validationResult } = require('express-validator');
 
 // @route    GET api/auth
@@ -58,7 +57,7 @@ router.post(
 					id: user.id
 				}
 			};
-			jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 360000 }, (error, token) => {
+			jwt.sign(payload, process.env.jwtSecret, { expiresIn: 360000 }, (error, token) => {
 				if (error) {
 					throw new Error('Unable to generate jsonwebtoken');
 				} else {

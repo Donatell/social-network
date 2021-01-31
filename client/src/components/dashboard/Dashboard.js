@@ -19,7 +19,7 @@ const Dashboard = ({ getCurrentProfile, deleteAccount, auth: { user }, profile: 
 		<Fragment>
 			<h1 className='large text-primary'>Dashboard</h1>
 			<p className='lead'>
-				<i class='fas fa-user'></i> Welcome {user && user.name}
+				<i className='fas fa-user'></i> Welcome {user && user.name}
 			</p>
 			{profile !== null ? (
 				<Fragment>
@@ -31,7 +31,7 @@ const Dashboard = ({ getCurrentProfile, deleteAccount, auth: { user }, profile: 
 				<Fragment>
 					<p>You have not setup a profile, please add some info</p>
 					<Link to='/create-profile' className='btn btn-primary'>
-						<i class='fas fa-user-circle'></i> Create Profile
+						<i className='fas fa-user-circle'></i> Create Profile
 					</Link>
 				</Fragment>
 			)}

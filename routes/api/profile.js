@@ -3,7 +3,6 @@ const router = express.Router();
 const auth = require('../../middleware/auth.js');
 const { check, validationResult } = require('express-validator');
 const request = require('request');
-const config = require('config');
 
 const Profile = require('./models/Profile.js');
 const Post = require('./models/Post.js');
@@ -85,19 +84,13 @@ router.post(
 			if (profile) {
 				// update profile
 				profile = await Profile.findOneAndUpdate({ user: req.user.id }, { $set: profileFields }, { new: true });
-				return res.json({
-					profile,
-					msg: 'Profile has been updated successfully'
-				});
+				return res.json(profile);
 			}
 
 			// create new profile
 			profile = new Profile(profileFields);
 			await profile.save();
-			res.json({
-				profile,
-				msg: 'Profile has been created successfully'
-			});
+			res.json(profile);
 		} catch (error) {
 			console.error(error);
 			res.status(500).send('Server Error');
@@ -281,11 +274,7 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
 router.get('/github/:username', async (req, res) => {
 	try {
 		const options = {
-			uri: `https://api.github.com/users/${
-				req.params.username
-			}/repos?per_page=5&sort=created:asc&client_id=${config.get('githubClientID')}&client_secret=${config.get(
-				'githubClientSecret'
-			)}`,
+			uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${process.env.githubClientID}&client_secret=${process.env.githubClientSecret}`,
 			method: 'GET',
 			headers: { 'user-agent': 'node-js' }
 		};
