@@ -6,6 +6,11 @@ import Landing from './components/layout/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Alert from './components/layout/Alert';
+import Dashboard from './components/dashboard/Dashboard';
+import PrivateRoute from './components/routing/PrivateRoute';
+import ProfileForm from './components/profile-forms/ProfileForm';
+import AddExperience from './components/profile-forms/AddExperience';
+import AddEducation from './components/profile-forms/AddEducation';
 
 // Redux state management
 import { Provider } from 'react-redux';
@@ -20,7 +25,7 @@ if (localStorage.token) {
 const App = () => {
 	useEffect(() => {
 		console.log('loading user');
-		store.dispatch(loadUser);
+		store.dispatch(loadUser());
 	}, []);
 
 	return (
@@ -34,6 +39,11 @@ const App = () => {
 						<Switch>
 							<Route exact path='/register' component={Register} />
 							<Route exact path='/login' component={Login} />
+							<PrivateRoute exact path='/dashboard' component={Dashboard} />
+							<PrivateRoute exact path='/create-profile' component={ProfileForm} />
+							<PrivateRoute exact path='/edit-profile' component={ProfileForm} />
+							<PrivateRoute exact path='/add-experience' component={AddExperience} />
+							<PrivateRoute exact path='/add-education' component={AddEducation} />
 						</Switch>
 					</section>
 				</Fragment>

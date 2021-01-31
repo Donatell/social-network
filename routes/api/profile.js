@@ -6,6 +6,7 @@ const request = require('request');
 const config = require('config');
 
 const Profile = require('./models/Profile.js');
+const Post = require('./models/Post.js');
 const User = require('./models/User.js');
 
 // @route    GET api/profile/me
@@ -18,9 +19,7 @@ router.get('/me', auth, async (req, res) => {
 		}).populate('user', ['name, avatar']);
 
 		if (!profile) {
-			return res
-				.status(400)
-				.json({ msg: 'There is no profile for this user' });
+			return res.status(400).json({ msg: 'There is no profile for this user' });
 		}
 
 		res.json(profile);
@@ -37,10 +36,7 @@ router.post(
 	'/',
 	[
 		auth,
-		[
-			check('status', 'Status is required').not().isEmpty(),
-			check('skills', 'Skills are required').not().isEmpty()
-		]
+		[check('status', 'Status is required').not().isEmpty(), check('skills', 'Skills are required').not().isEmpty()]
 	],
 	async (req, res) => {
 		const errors = validationResult(req);
@@ -73,9 +69,7 @@ router.post(
 		if (status) profileFields.status = status;
 		if (githubusername) profileFields.githubusername = githubusername;
 		if (skills) {
-			profileFields.skills = skills
-				.split(',')
-				.map((skill) => skill.trim());
+			profileFields.skills = skills.split(',').map((skill) => skill.trim());
 		}
 
 		// build social object
@@ -90,11 +84,7 @@ router.post(
 			let profile = await Profile.findOne({ user: req.user.id });
 			if (profile) {
 				// update profile
-				profile = await Profile.findOneAndUpdate(
-					{ user: req.user.id },
-					{ $set: profileFields },
-					{ new: true }
-				);
+				profile = await Profile.findOneAndUpdate({ user: req.user.id }, { $set: profileFields }, { new: true });
 				return res.json({
 					profile,
 					msg: 'Profile has been updated successfully'
@@ -120,10 +110,7 @@ router.post(
 // @access	 Public
 router.get('/', async (req, res) => {
 	try {
-		const profiles = await Profile.find({}).populate('user', [
-			'name',
-			'avatar'
-		]);
+		const profiles = await Profile.find({}).populate('user', ['name', 'avatar']);
 		res.json(profiles);
 	} catch (error) {
 		console.log(error.message);
@@ -161,7 +148,7 @@ router.get('/user/:user_id', async (req, res) => {
 router.delete('/', auth, async (req, res) => {
 	try {
 		// @todo - remove user's posts
-
+		await Post.deleteMany({ user: req.user.id });
 		// remove profile
 		await Profile.findOneAndRemove({ user: req.user.id });
 		// remove user
@@ -191,15 +178,7 @@ router.put(
 		if (!errors.isEmpty()) {
 			return res.status(400).json({ errors: errors.array() });
 		}
-		const {
-			title,
-			company,
-			location,
-			from,
-			to,
-			current,
-			description
-		} = req.body;
+		const { title, company, location, from, to, current, description } = req.body;
 
 		const newExp = {
 			title,
@@ -229,9 +208,7 @@ router.put(
 router.delete('/experience/:exp_id', auth, async (req, res) => {
 	try {
 		const profile = await Profile.findOne({ user: req.user.id });
-		profile.experience = profile.experience.filter(
-			(exp) => exp._id.toString() !== req.params.exp_id
-		);
+		profile.experience = profile.experience.filter((exp) => exp._id.toString() !== req.params.exp_id);
 		await profile.save();
 		res.json(profile);
 	} catch (error) {
@@ -259,15 +236,7 @@ router.put(
 		if (!errors.isEmpty()) {
 			return res.status(400).json({ errors: errors.array() });
 		}
-		const {
-			school,
-			degree,
-			fieldofstudy,
-			from,
-			to,
-			current,
-			description
-		} = req.body;
+		const { school, degree, fieldofstudy, from, to, current, description } = req.body;
 
 		const newEdu = {
 			school,
@@ -297,9 +266,7 @@ router.put(
 router.delete('/education/:edu_id', auth, async (req, res) => {
 	try {
 		const profile = await Profile.findOne({ user: req.user.id });
-		profile.education = profile.education.filter(
-			(edu) => edu._id.toString() !== req.params.edu_id
-		);
+		profile.education = profile.education.filter((edu) => edu._id.toString() !== req.params.edu_id);
 		await profile.save();
 		res.json(profile);
 	} catch (error) {
@@ -316,9 +283,9 @@ router.get('/github/:username', async (req, res) => {
 		const options = {
 			uri: `https://api.github.com/users/${
 				req.params.username
-			}/repos?per_page=5&sort=created:asc&client_id=${config.get(
-				'githubClientID'
-			)}&client_secret=${config.get('githubClientSecret')}`,
+			}/repos?per_page=5&sort=created:asc&client_id=${config.get('githubClientID')}&client_secret=${config.get(
+				'githubClientSecret'
+			)}`,
 			method: 'GET',
 			headers: { 'user-agent': 'node-js' }
 		};
